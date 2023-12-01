@@ -1,13 +1,5 @@
 import Cocoa
 
-// Puzzle input will be a list of strings
-// We have to obtain the first and last digits of each string
-// If there is only one digit, it is both the first and last digit
-// The calibration value of each line is the combination of the first and last digits
-// Example:
-// pr3stu8vwx - 38
-// treb7uchet - 7
-// ab2h23jck5 - 25
 
 func readByLine(from fileUrl: URL) -> [String] {
     let content = try! String(contentsOf: fileUrl)
@@ -33,8 +25,8 @@ func computeTotalCalibration(from fileUrl: URL) -> Int {
 
 // MARK: - Part 1
 
-//let fileUrl = Bundle.main.url(forResource: "input", withExtension: "txt")!
-//computeTotalCalibration(from: fileUrl)
+let fileUrl = Bundle.main.url(forResource: "input", withExtension: "txt")!
+computeTotalCalibration(from: fileUrl)
 
 // MARK: - Part 2
 
@@ -48,7 +40,7 @@ enum Numbers {
         return [.zero, .one, .two, .three, .four, .five, .six, .seven, .eight, .nine]
     }
     
-    var stringValue: String {
+    var spelling: String {
         switch self {
         case .zero: return "zero"
         case .one: return "one"
@@ -63,7 +55,7 @@ enum Numbers {
         }
     }
     
-    var intValue: String {
+    var replaceValue: String {
         switch self {
         case .zero: return "z0o"
         case .one: return "o1e"
@@ -81,16 +73,14 @@ enum Numbers {
 
 func replaceSpelledOutNumbers(in line: String) -> String {
     var newLine = line
-    //add the last ch
     for number in Numbers.allCases {
-        newLine = newLine.replacingOccurrences(of: number.stringValue, with: "\(number.intValue)")
+        newLine = newLine.replacingOccurrences(of: number.spelling, with: "\(number.replaceValue)")
     }
     return newLine
 }
 
 func computeTotalCalibrationWithSpelledOutNumbers(from fileUrl: URL) -> Int {
     let lines = readByLine(from: fileUrl).map { replaceSpelledOutNumbers(in: $0)}
-    print(lines)
         let calibrationValues = lines.map { calibrationValue(of: $0) }
     return calibrationValues.reduce(0, +)
 }
